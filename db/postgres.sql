@@ -1,3 +1,9 @@
+DO $$
+BEGIN
+  RAISE NOTICE '✔ SQL init script is running!';
+END
+$$;
+
 -- Skapa tabellen för användare
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
@@ -16,7 +22,7 @@ CREATE TABLE workouts (
 );
 
 -- Skapa tabellen för övningar
-CREATE TABLE exercices (
+CREATE TABLE exercises (
   id SERIAL PRIMARY KEY,
   name TEXT NOT NULL,
   description TEXT,
@@ -31,4 +37,8 @@ CREATE TABLE workout_exercises (
   sets INTEGER NOT NULL,
   reps INTEGER NOT NULL,
   weight NUMERIC(5,2)
-)
+);
+
+--Testdata (aanvändare)
+INSERT INTO users (name, email)
+VALUES ('Testperson', 'test@example.com');

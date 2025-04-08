@@ -1,5 +1,17 @@
 version: "3.9"
 services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/gymapp
+    depends_on:
+      db:
+        condition: service_healthy
   db:
     image: postgres
     restart: always
