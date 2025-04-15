@@ -8,7 +8,10 @@ if (!JWT_SECRET) {
 }
 
 // Skapa ett JWT-token från payload
-export function signToken(payload: TokenPayload, options?: SignOptions): string {
+export function signToken(
+  payload: TokenPayload,
+  options?: SignOptions
+): string {
   return jwt.sign(payload, JWT_SECRET as string, {
     expiresIn: "1h", // default
     ...options,
@@ -16,9 +19,9 @@ export function signToken(payload: TokenPayload, options?: SignOptions): string 
 }
 
 // Verifiera ett JWT-token och returnera innehållet (eller null om ogiltigt)
-export function verifyToken(token: string): TokenPayload | null {
+export function verifyToken<T = TokenPayload>(token: string): T | null {
   try {
-    return jwt.verify(token, JWT_SECRET as string) as TokenPayload;
+    return jwt.verify(token, JWT_SECRET as string) as T;
   } catch {
     return null;
   }
