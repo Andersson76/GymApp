@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyToken } from "@/lib/auth";
+//import { verifyToken } from "@/lib/auth";
 import type { TokenPayload } from "@/types/auth";
+import { jwtVerify } from "jose";
+import type { JWTPayload } from "jose";
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   console.log("🔐 middleware triggas!");
 
   const authHeader = request.headers.get("authorization");
@@ -15,7 +17,13 @@ export function middleware(request: NextRequest) {
   }
 
   const token = authHeader.split(" ")[1];
-  const payload = verifyToken<TokenPayload>(token);
+  // Logga token direkt efter att den plockats ut
+  console.log("🔐 Token från header:", token);
+
+  const payload = (await verifyToken(token)) as TokenPayload | null;
+
+  // Logga resultatet av verifyToken
+  console.log("🔐 Payload från verifyToken:", payload);
 
   if (!payload) {
     return NextResponse.json({ error: "Ogiltig token" }, { status: 401 });
@@ -28,8 +36,16 @@ export function middleware(request: NextRequest) {
   return response;
 }
 
-// 👇 Detta är nyckeln för att få använda jsonwebtoken i middleware
+async function verifyToken(token: string): Promise<JWTPayload | null> {
+  const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+  try {
+    const { payload } = await jwtVerify(token, secret);
+    return payload;
+  } catch {
+    return null;
+  }
+}
+
 export const config = {
   matcher: ["/api/protected-test", "/api/debug-token", "/api/workouts/:path*"],
-  runtime: "nodejs",
 };
