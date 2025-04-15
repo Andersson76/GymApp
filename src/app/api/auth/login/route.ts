@@ -21,7 +21,10 @@ export async function POST(req: NextRequest) {
       [email]
     );
 
+    console.log("safeQuery login-resultat:", result);
+
     if (!result.success) {
+      console.error("DB-fel vid login:", result.error);
       return apiError("Kunde inte kontrollera inloggning", 500);
     }
 
