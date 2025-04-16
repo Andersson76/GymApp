@@ -4,6 +4,8 @@ BEGIN
 END
 $$;
 
+DROP TABLE IF EXISTS workouts;
+
 -- Skapa tabellen för användare
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
@@ -18,7 +20,9 @@ CREATE TABLE workouts (
   user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   title TEXT NOT NULL,
   date DATE NOT NULL,
-  notes TEXT
+  description TEXT,
+  duration INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Skapa tabellen för övningar

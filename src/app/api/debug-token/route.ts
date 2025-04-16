@@ -1,6 +1,6 @@
 // app/api/debug-token/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { verifyToken } from "@/lib/auth";
+import { verifyToken } from "@/lib/jwt";
 import type { TokenPayload } from "@/types/auth";
 
 export async function GET(req: NextRequest) {
