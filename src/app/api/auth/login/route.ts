@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { safeQuery } from "@/lib/safeQuery";
 import { apiError } from "@/lib/apiError";
 import { handleError } from "@/lib/handleError";
-import { signToken } from "@/lib/auth";
+import { signToken } from "@/lib/jwt";
 import { isValidEmail } from "@/lib/validators";
 import type { User } from "@/types/user";
 import type { TokenPayload } from "@/types/auth";
