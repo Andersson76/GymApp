@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import { WorkoutSchema } from "@/lib/schemas/workout";
 import { verifyToken } from "@/lib/jwt";
-import { sql } from "@vercel/postgres";
+import { query } from "@/lib/db";
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+// GET träningspass med id
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function GET(req: NextRequest, { params }: any) {
   const token = req.headers.get("authorization")?.split(" ")[1];
   if (!token)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -17,13 +17,15 @@ export async function GET(
   const workoutId = Number(params.id);
 
   try {
-    const result = await sql`
-      SELECT * FROM workouts
-      WHERE id = ${workoutId} AND user_id = ${payload.userId};
-    `;
+    const result = await query(
+      `SELECT * FROM workouts WHERE id = $1 AND user_id = $2;`,
+      [workoutId, payload.userId]
+    );
+
     if (result.rowCount === 0) {
       return NextResponse.json({ error: "Workout not found" }, { status: 404 });
     }
+
     return NextResponse.json(result.rows[0]);
   } catch (err) {
     console.error(err);
@@ -34,10 +36,8 @@ export async function GET(
   }
 }
 
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function PUT(req: NextRequest, { params }: any) {
   const token = req.headers.get("authorization")?.split(" ")[1];
   if (!token)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -46,16 +46,26 @@ export async function PUT(
   if (!payload)
     return NextResponse.json({ error: "Invalid token" }, { status: 401 });
 
-  const { title, description, date, duration } = await req.json();
   const workoutId = Number(params.id);
+  const body = await req.json();
+
+  const result = WorkoutSchema.safeParse(body);
+  if (!result.success) {
+    return NextResponse.json(
+      { errors: result.error.format() },
+      { status: 400 }
+    );
+  }
+
+  const { title, description, date, duration } = result.data;
 
   try {
-    const result = await sql`
+    const result = await query(`
       UPDATE workouts
       SET title = ${title}, description = ${description}, date = ${date}, duration = ${duration}
       WHERE id = ${workoutId} AND user_id = ${payload.userId}
       RETURNING *;
-    `;
+    `);
     if (result.rowCount === 0) {
       return NextResponse.json(
         { error: "Workout not found or not authorized" },
@@ -72,10 +82,8 @@ export async function PUT(
   }
 }
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function DELETE(req: NextRequest, { params }: any) {
   const token = req.headers.get("authorization")?.split(" ")[1];
   if (!token)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -87,11 +95,11 @@ export async function DELETE(
   const workoutId = Number(params.id);
 
   try {
-    const result = await sql`
+    const result = await query(`
       DELETE FROM workouts
       WHERE id = ${workoutId} AND user_id = ${payload.userId}
       RETURNING *;
-    `;
+    `);
     if (result.rowCount === 0) {
       return NextResponse.json(
         { error: "Workout not found or not authorized" },
