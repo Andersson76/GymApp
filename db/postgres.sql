@@ -11,6 +11,7 @@ CREATE TABLE users (
   id SERIAL PRIMARY KEY,
   name TEXT NOT NULL,
   email TEXT UNIQUE NOT NULL,
+  password TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -43,6 +44,6 @@ CREATE TABLE workout_exercises (
   weight NUMERIC(5,2)
 );
 
---Testdata (aanvändare)
-INSERT INTO users (name, email)
-VALUES ('Testperson', 'test@example.com');
+--Testdata (användare)
+INSERT INTO users (name, email, password)
+VALUES ('Testperson', 'test@example.com', '1234');
