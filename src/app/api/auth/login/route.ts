@@ -24,8 +24,9 @@ export async function POST(req: NextRequest) {
       return apiError("Rätt skriven email krävs", 400);
     }
 
+    // Kontrollera att användaren finns och att lösenord matchar
     const userResult = await safeQuery<User>(
-      "SELECT * FROM users WHERE email = $1",
+      "SELECT * FROM users WHERE email = $1 AND password = $2",
       [email, password]
     );
 
@@ -37,7 +38,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (userResult.data.length === 0) {
-      return apiError("E-postadressen finns inte", 404);
+      return apiError("Fel e-post eller lösenord", 401);
     }
 
     const user = userResult.data[0];
