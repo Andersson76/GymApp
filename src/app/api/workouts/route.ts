@@ -106,7 +106,7 @@ export async function PUT(req: NextRequest) {
 
     return NextResponse.json(updateResult.rows[0], { status: 200 });
   } catch (err) {
-    console.error("❌ Fel vid uppdatering:", err);
+    console.error("Fel vid uppdatering:", err);
     return NextResponse.json(
       { error: "Kunde inte uppdatera träningspass" },
       { status: 500 }
@@ -154,7 +154,7 @@ export async function DELETE(req: NextRequest) {
       { status: 200 }
     );
   } catch (err) {
-    console.error("❌ Fel vid radering:", err);
+    console.error("Fel vid radering:", err);
     return NextResponse.json(
       { error: "Kunde inte radera träningspass" },
       { status: 500 }
