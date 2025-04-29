@@ -15,21 +15,26 @@ export default function LoginPage() {
     e.preventDefault();
     setError("");
 
-    const res = await fetch("/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (!res.ok) {
-      const { message } = await res.json();
-      setError(message || "Inloggning misslyckades");
-      return;
+      if (!res.ok) {
+        const data = await res.json();
+        setError(data.message || "Inloggning misslyckades");
+        return;
+      }
+
+      const { token } = await res.json();
+      login(token);
+      router.push("/");
+    } catch (err) {
+      console.log("Error: ", err);
+      setError("Kunde inte kontakta servern:");
     }
-
-    const { token } = await res.json();
-    login(token);
-    router.push("/");
   };
 
   return (
