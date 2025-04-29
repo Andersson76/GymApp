@@ -4,20 +4,27 @@ import { apiError } from "@/lib/apiError";
 import { handleError } from "@/lib/handleError";
 import { signToken } from "@/lib/jwt";
 import { isNonEmptyString, isValidEmail } from "@/lib/validators";
+import { RegisterSchema } from "@/lib/schemas/auth";
 import type { User, NewUser } from "@/types/user";
 import type { TokenPayload } from "@/types/auth";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { name, email } = body as NewUser;
+    const result = RegisterSchema.safeParse(body);
 
-    if (!isNonEmptyString(name)) {
-      return apiError("Rätt skrivet namn krävs", 400);
+    if (!result.success) {
+      return apiError("Felaktigt ifylld registreringsdata", 400);
     }
+
+    const newUser: NewUser = result.data;
+    const { name, email, password } = newUser;
 
     if (!isValidEmail(email)) {
       return apiError("Rätt skriven email krävs", 400);
+    }
+
+    if (!isNonEmptyString) {
     }
 
     // Kontrollera om användaren redan finns
@@ -35,16 +42,17 @@ export async function POST(req: NextRequest) {
     }
 
     // Skapa ny användare
-    const result = await safeQuery<User>(
-      "INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *",
-      [name, email]
+    const resultInsert = await safeQuery<User>(
+      "INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *",
+      [name, email, password]
     );
 
-    if (!result.success || result.data.length === 0) {
+    if (!resultInsert.success || resultInsert.data.length === 0) {
       return apiError("Kunde inte skapa användare", 500);
     }
 
-    const user = result.data[0];
+    const user = resultInsert.data[0];
+    console.log("Registreringsförsök:", name, email, password);
 
     // Skapa JWT token
     const payload: TokenPayload = {
