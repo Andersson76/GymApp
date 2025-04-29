@@ -3,7 +3,6 @@ import { safeQuery } from "@/lib/safeQuery";
 import { apiError } from "@/lib/apiError";
 import { handleError } from "@/lib/handleError";
 import { signToken } from "@/lib/jwt";
-import { isValidEmail } from "@/lib/validators";
 import { LoginSchema } from "@/lib/schemas/auth";
 import type { User } from "@/types/user";
 import type { TokenPayload } from "@/types/auth";
@@ -11,18 +10,12 @@ import type { TokenPayload } from "@/types/auth";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    // Kör först LoginSchema från zod
     const result = LoginSchema.safeParse(body);
     if (!result.success) {
       return apiError("Felaktigt ifylld e-post eller lösenord", 400);
     }
 
     const { email, password } = result.data;
-
-    // Extra validering via lib/validators
-    if (!isValidEmail(email)) {
-      return apiError("Rätt skriven email krävs", 400);
-    }
 
     // Kontrollera att användaren finns och att lösenord matchar
     const userResult = await safeQuery<User>(

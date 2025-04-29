@@ -2,73 +2,61 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const router = useRouter();
+  const { login } = useAuth();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
-    try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data?.error || "Fel vid inloggning");
-        return;
-      }
-
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-        router.push("/dashboard");
-      }
-    } catch (err) {
-      console.error("Login error:", err);
-      setError("Något gick fel. Försök igen.");
+    if (!res.ok) {
+      const { message } = await res.json();
+      setError(message || "Inloggning misslyckades");
+      return;
     }
+
+    const { token } = await res.json();
+    login(token);
+    router.push("/");
   };
 
   return (
-    <div className="max-w-md mx-auto mt-20 p-6 shadow rounded bg-white">
-      <h1 className="text-2xl font-semibold mb-4">Logga in</h1>
-      <form
-        onSubmit={handleLogin}
-        autoComplete="off"
-        className="flex flex-col space-y-4"
-      >
+    <main className="p-8 max-w-md mx-auto">
+      <h1 className="text-xl font-bold mb-4">Logga in</h1>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
           type="email"
           placeholder="E-post"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="border p-2 rounded"
+          required
+          className="border p-2"
         />
         <input
           type="password"
           placeholder="Lösenord"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="border p-2 rounded"
+          required
+          className="border p-2"
         />
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-        <button
-          type="submit"
-          className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
-        >
+        <button type="submit" className="bg-black text-white p-2 rounded">
           Logga in
         </button>
+        {error && <p className="text-red-500 text-sm">{error}</p>}
       </form>
-    </div>
+    </main>
   );
 }
