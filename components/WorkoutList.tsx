@@ -1,5 +1,5 @@
 "use client";
-
+import ConfirmModal from "@/components/ConfirmModal";
 import { useEffect, useState } from "react";
 
 type Workout = {
@@ -14,6 +14,8 @@ type Workout = {
 export default function WorkoutList() {
   const [workouts, setWorkouts] = useState<Workout[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -48,6 +50,43 @@ export default function WorkoutList() {
     fetchWorkouts();
   }, []);
 
+  const handleDelete = async (id: number) => {
+    setSelectedId(id);
+    setShowModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!selectedId) return;
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Ingen token = du är inte inloggad.");
+      return;
+    }
+
+    const res = await fetch(`/api/workouts/${selectedId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (res.ok) {
+      setWorkouts((prev) => prev.filter((w) => w.id !== selectedId));
+    } else {
+      const data = await res.json();
+      alert(data.error || "Kunde inte ta bort passet");
+    }
+
+    setShowModal(false);
+    setSelectedId(null);
+  };
+
+  const handleCancel = () => {
+    setShowModal(false);
+    setSelectedId(null);
+  };
+
   if (error) return <p className="text-red-600">{error}</p>;
 
   if (workouts.length === 0) return <p>Inga pass loggade ännu.</p>;
@@ -63,10 +102,22 @@ export default function WorkoutList() {
 
           <div className="mt-4 flex gap-2">
             <button className="text-blue-600 hover:underline">Redigera</button>
-            <button className="text-red-600 hover:underline">Ta bort</button>
+            <button
+              onClick={() => handleDelete(w.id)}
+              className="text-red-600 hover:underline"
+            >
+              Ta bort
+            </button>
           </div>
         </li>
       ))}
+      <ConfirmModal
+        isOpen={showModal}
+        onCancel={handleCancel}
+        onConfirm={handleConfirmDelete}
+        title="Radera träningspass?"
+        message="Vill du verkligen ta bort detta pass? Det går inte att ångra."
+      />
     </ul>
   );
 }

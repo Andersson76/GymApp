@@ -20,9 +20,14 @@ export default function Header() {
             </button>
           </>
         ) : (
-          <Link href="/login" className="text-blue-600 underline">
-            Logga in
-          </Link>
+          <>
+            <Link href="/login" className="text-blue-600 underline">
+              Logga in
+            </Link>
+            <Link href="/register" className="text-blue-600 underline">
+              Registrera
+            </Link>
+          </>
         )}
       </nav>
     </header>
