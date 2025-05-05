@@ -1,5 +1,6 @@
 "use client";
 import { useAuth } from "@/context/AuthContext";
+import Link from "next/link";
 
 export default function Home() {
   const { user } = useAuth();
@@ -11,11 +12,14 @@ export default function Home() {
         <p>Välkommen tillbaka, {user.email}!</p>
       ) : (
         <p>
-          Vänligen{" "}
-          <a href="/login" className="underline">
-            logga in
-          </a>{" "}
-          för att använda tjänsten.
+          <Link href="/login" className="underline">
+            Logga in
+          </Link>{" "}
+          eller{" "}
+          <Link href="/register" className="underline">
+            registrera dig
+          </Link>{" "}
+          för att börja logga dina pass.
         </p>
       )}
     </main>
