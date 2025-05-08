@@ -1,10 +1,11 @@
 "use client";
 
-import Link from "next/link";
+import { useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import Sidebar from "@/components/Sidebar";
 import type { ReactNode } from "react";
+import Header from "@/components/Header";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const { user } = useAuth();
@@ -21,21 +22,16 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   if (user === null) return null;
 
   return (
-    <div className="min-h-screen grid grid-cols-[200px_1fr]">
-      <aside className="bg-gray-100 p-4 border-r">
-        <nav className="space-y-2">
-          <Link href="/dashboard" className="block">
-            🏠 Dashboard
-          </Link>
-          <Link href="/dashboard/logga-pass" className="block">
-            ➕ Logga pass
-          </Link>
-          <Link href="/dashboard/historik" className="block">
-            📆 Historik
-          </Link>
-        </nav>
-      </aside>
-      <main className="p-6">{children}</main>
+    <div className="min-h-screen flex flex-col">
+      <Header />
+
+      <div className="flex flex-1">
+        {/* Sidebar under header, vänster på desktop */}
+        <Sidebar />
+
+        {/* Main content */}
+        <main className="flex-1 p-6 bg-gray-50">{children}</main>
+      </div>
     </div>
   );
 }

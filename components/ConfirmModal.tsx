@@ -20,7 +20,13 @@ export default function ConfirmModal({
 }: Props) {
   return (
     <Transition.Root show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={onCancel}>
+      <Dialog
+        as="div"
+        className="relative z-50"
+        static
+        open={isOpen}
+        onClose={() => {}}
+      >
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -30,11 +36,11 @@ export default function ConfirmModal({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          <div className="fixed inset-0 bg-gray-300 bg-opacity-75 transition-opacity" />
         </Transition.Child>
 
-        <div className="fixed inset-0 z-50 overflow-y-auto">
-          <div className="flex min-h-full items-end justify-center p-4 sm:items-center sm:p-0">
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="flex justify-center">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -64,14 +70,14 @@ export default function ConfirmModal({
                     onClick={onConfirm}
                     className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-700 sm:ml-3 sm:w-auto"
                   >
-                    Ja, radera
+                    ✅ Ja, radera
                   </button>
                   <button
                     type="button"
                     onClick={onCancel}
                     className="mt-3 inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-300 sm:mt-0 sm:w-auto"
                   >
-                    Avbryt
+                    🗑 Avbryt
                   </button>
                 </div>
               </Dialog.Panel>
