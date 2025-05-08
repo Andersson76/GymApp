@@ -17,7 +17,12 @@ FROM node:20-alpine AS runner
 
 WORKDIR /app
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
+ENV PORT=3000
+
+# Installera endast produktionsberoenden
+COPY package.json package-lock.json ./
+RUN npm install --omit=dev
 
 # Kopiera endast det som behövs för att köra
 COPY --from=builder /app/public ./public
@@ -28,4 +33,4 @@ COPY --from=builder /app/package.json ./package.json
 EXPOSE 3000
 
 # Starta Next.js via sin inbyggda server
-CMD ["npm", "start"]
+CMD ["node", "node_modules/next/dist/bin/next", "start"]

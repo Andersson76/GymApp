@@ -50,43 +50,6 @@ export default function WorkoutList() {
     fetchWorkouts();
   }, []);
 
-  const handleDelete = async (id: number) => {
-    setSelectedId(id);
-    setShowModal(true);
-  };
-
-  const handleConfirmDelete = async () => {
-    if (!selectedId) return;
-
-    const token = localStorage.getItem("token");
-    if (!token) {
-      alert("Ingen token = du är inte inloggad.");
-      return;
-    }
-
-    const res = await fetch(`/api/workouts/${selectedId}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (res.ok) {
-      setWorkouts((prev) => prev.filter((w) => w.id !== selectedId));
-    } else {
-      const data = await res.json();
-      alert(data.error || "Kunde inte ta bort passet");
-    }
-
-    setShowModal(false);
-    setSelectedId(null);
-  };
-
-  const handleCancel = () => {
-    setShowModal(false);
-    setSelectedId(null);
-  };
-
   if (error) return <p className="text-red-600">{error}</p>;
 
   if (workouts.length === 0) return <p>Inga pass loggade ännu.</p>;
@@ -94,7 +57,7 @@ export default function WorkoutList() {
   return (
     <ul className="space-y-4">
       {workouts.map((w) => (
-        <li key={w.id} className="border p-4 rounded shadow-sm">
+        <li key={w.id} className="relative border p-4 rounded shadow-sm">
           <h3 className="font-bold text-lg">{w.title}</h3>
           <p className="text-sm text-gray-600">🗓️ {w.date}</p>
           <p className="text-sm text-gray-600">⏱️ {w.duration} min</p>
@@ -103,21 +66,48 @@ export default function WorkoutList() {
           <div className="mt-4 flex gap-2">
             <button className="text-blue-600 hover:underline">Redigera</button>
             <button
-              onClick={() => handleDelete(w.id)}
+              onClick={() => {
+                setSelectedId(w.id);
+                setShowModal(true);
+              }}
               className="text-red-600 hover:underline"
             >
               Ta bort
             </button>
           </div>
+
+          {/* 👇 Modal visas bara om rätt pass är valt */}
+          {w.id === selectedId && (
+            <ConfirmModal
+              isOpen={showModal}
+              onCancel={() => {
+                setShowModal(false);
+                setSelectedId(null);
+              }}
+              onConfirm={async () => {
+                const token = localStorage.getItem("token");
+                if (!token) return;
+
+                const res = await fetch(`/api/workouts/${w.id}`, {
+                  method: "DELETE",
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                });
+
+                if (res.ok) {
+                  setWorkouts((prev) => prev.filter((wp) => wp.id !== w.id));
+                }
+
+                setShowModal(false);
+                setSelectedId(null);
+              }}
+              title="Radera träningspass?"
+              message="Vill du verkligen ta bort detta pass? Det går inte att ångra."
+            />
+          )}
         </li>
       ))}
-      <ConfirmModal
-        isOpen={showModal}
-        onCancel={handleCancel}
-        onConfirm={handleConfirmDelete}
-        title="Radera träningspass?"
-        message="Vill du verkligen ta bort detta pass? Det går inte att ångra."
-      />
     </ul>
   );
 }
