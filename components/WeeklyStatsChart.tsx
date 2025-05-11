@@ -16,7 +16,7 @@ export default function WeeklyStatsChart() {
     const fetchData = async () => {
       const res = await fetch("/api/stats/weekly-duration", {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`, // anpassa om du lagrar token annorlunda
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       if (res.ok) {
