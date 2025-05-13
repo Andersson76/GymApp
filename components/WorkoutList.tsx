@@ -1,6 +1,8 @@
 "use client";
 import ConfirmModal from "@/components/ConfirmModal";
+import EditWorkoutModal from "@/components/EditWorkoutModal";
 import { useEffect, useState } from "react";
+import IconButton from "@/components/IconButton";
 
 type Workout = {
   id: number;
@@ -16,6 +18,7 @@ export default function WorkoutList() {
   const [error, setError] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [editingWorkout, setEditingWorkout] = useState<Workout | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -54,29 +57,74 @@ export default function WorkoutList() {
 
   if (workouts.length === 0) return <p>Inga pass loggade ännu.</p>;
 
+  const handleEdit = (workout: Workout) => {
+    setEditingWorkout(workout);
+  };
+
+  const handleSaveEdit = async (updated: {
+    title: string;
+    date: string;
+    duration: number;
+    description?: string;
+  }) => {
+    if (!editingWorkout) return;
+
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    const res = await fetch(`/api/workouts/${editingWorkout.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(updated),
+    });
+
+    if (res.ok) {
+      const updatedWorkout = await res.json();
+      setWorkouts((prev) =>
+        prev.map((w) => (w.id === editingWorkout.id ? updatedWorkout : w))
+      );
+      setEditingWorkout(null);
+    }
+  };
+
+  const handleDelete = (id: number) => {
+    setSelectedId(id);
+    setShowModal(true);
+  };
+
   return (
     <ul className="space-y-4">
       {workouts.map((w) => (
-        <li key={w.id} className="relative border p-4 rounded shadow-sm">
-          <h3 className="font-bold text-lg">{w.title}</h3>
-          <p className="text-sm text-gray-600">🗓️ {w.date}</p>
-          <p className="text-sm text-gray-600">⏱️ {w.duration} min</p>
-          {w.description && <p className="mt-2">{w.description}</p>}
-
-          <div className="mt-4 flex gap-2">
-            <button className="text-blue-600 hover:underline">Redigera</button>
-            <button
-              onClick={() => {
-                setSelectedId(w.id);
-                setShowModal(true);
-              }}
-              className="text-red-600 hover:underline"
-            >
-              Ta bort
-            </button>
+        <li
+          key={w.id}
+          className="relative bg-white border rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow"
+        >
+          <div className="flex justify-between items-center">
+            <h3 className="text-xl font-semibold text-gray-800">{w.title}</h3>
+            <span className="text-xs text-gray-500">{w.date}</span>
           </div>
 
-          {/* 👇 Modal visas bara om rätt pass är valt */}
+          <div className="mt-2 flex items-center text-sm text-gray-600 gap-4">
+            <span>⏱️ {w.duration} min</span>
+            {w.description && <span className="italic">{w.description}</span>}
+          </div>
+
+          <div className="mt-4 flex gap-3">
+            <IconButton
+              icon="✏️"
+              onClick={() => handleEdit(w)}
+              title="Redigera"
+            />
+            <IconButton
+              icon="🗑️"
+              onClick={() => handleDelete(w.id)}
+              title="Ta bort"
+            />
+          </div>
+
           {w.id === selectedId && (
             <ConfirmModal
               isOpen={showModal}
@@ -104,6 +152,20 @@ export default function WorkoutList() {
               }}
               title="Radera träningspass?"
               message="Vill du verkligen ta bort detta pass? Det går inte att ångra."
+            />
+          )}
+
+          {editingWorkout && (
+            <EditWorkoutModal
+              isOpen={!!editingWorkout}
+              onClose={() => setEditingWorkout(null)}
+              onSave={handleSaveEdit}
+              initialData={{
+                title: editingWorkout.title,
+                date: editingWorkout.date,
+                duration: editingWorkout.duration,
+                description: editingWorkout.description || "",
+              }}
             />
           )}
         </li>
