@@ -24,7 +24,8 @@ export async function POST(req: NextRequest) {
       return apiError("Rätt skriven email krävs", 400);
     }
 
-    if (!isNonEmptyString) {
+    if (!isNonEmptyString(name)) {
+      return apiError("Namn krävs", 400);
     }
 
     // Kontrollera om användaren redan finns
@@ -58,6 +59,7 @@ export async function POST(req: NextRequest) {
     const payload: TokenPayload = {
       userId: user.id,
       email: user.email,
+      name: user.name,
     };
     const token = signToken(payload);
 
