@@ -12,6 +12,7 @@
     "@headlessui/react": "^2.2.2",
     "@heroicons/react": "^2.2.0",
     "chart.js": "^4.4.9",
+    "framer-motion": "^12.11.0",
     "jose": "^6.0.10",
     "jsonwebtoken": "^9.0.2",
     "next": "15.2.4",
