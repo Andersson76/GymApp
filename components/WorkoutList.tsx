@@ -1,6 +1,6 @@
 "use client";
 import ConfirmModal from "@/components/ConfirmModal";
-import EditWorkoutModal from "@/components/EditWorkoutModal";
+import EditModal from "@/components/EditWorkoutModal";
 import { useEffect, useState } from "react";
 import IconButton from "@/components/IconButton";
 
@@ -156,7 +156,7 @@ export default function WorkoutList() {
           )}
 
           {editingWorkout && (
-            <EditWorkoutModal
+            <EditModal
               isOpen={!!editingWorkout}
               onClose={() => setEditingWorkout(null)}
               onSave={handleSaveEdit}
