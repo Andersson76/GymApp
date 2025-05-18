@@ -30,7 +30,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         <Sidebar />
 
         {/* Main content */}
-        <main className="flex-1 p-6 bg-gray-50">{children}</main>
+        <main className="flex-1 p-6 text-black dark:text-white bg-white dark:bg-gradient-to-b dark:from-black dark:to-gray-900 transition-colors duration-300">
+          {children}
+        </main>
       </div>
     </div>
   );

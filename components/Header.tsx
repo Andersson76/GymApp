@@ -6,13 +6,14 @@ import Image from "next/image";
 import { useAuth } from "@/context/AuthContext";
 import { Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import ToggleDarkMode from "./ToggleDarkMode";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, logout } = useAuth();
 
   return (
-    <header className="bg-white border-b shadow-sm px-4 py-3 sm:px-6 lg:px-8">
+    <header className="bg-white dark:bg-black border-b border-gray-200 dark:border-gray-700 shadow-sm px-4 py-3 sm:px-6 lg:px-8 text-black dark:text-white">
       <div className="mx-auto w-full max-w-screen-xl 2xl:max-w-screen-2xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           {/* Vänster: Logo + Hamburger */}
@@ -31,7 +32,7 @@ export default function Header() {
               </button>
             </div>
 
-            {/* Logo – always visible */}
+            {/* Logo – alltid synlig */}
             <div className="ml-4">
               <Image
                 src="/gymappTransparent.png"
@@ -44,8 +45,10 @@ export default function Header() {
             </div>
           </div>
 
-          {/* Right: Auth Buttons */}
-          <div className="flex items-center space-x-4 text-sm">
+          {/* Höger: Auth eller meny */}
+          <div className="flex items-center gap-4">
+            {/* Toggle-knapp – visas alltid */}
+            <ToggleDarkMode />
             {!user ? (
               <>
                 <Link
@@ -62,10 +65,9 @@ export default function Header() {
                 </Link>
               </>
             ) : (
-              <Menu as="div" className="relative inline-block text-left">
-                <Menu.Button className="text-gray-700 hover:text-blue-600">
-                  Inloggad som:{" "}
-                  <span className="font-medium">{user.email}</span>
+              <Menu as="div" className="relative text-sm">
+                <Menu.Button className="hidden sm:inline text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
+                  Inloggad som: <span className="font-medium">{user.name}</span>
                 </Menu.Button>
                 <Transition
                   enter="transition ease-out duration-100"
@@ -75,14 +77,14 @@ export default function Header() {
                   leaveFrom="transform opacity-100 scale-100"
                   leaveTo="transform opacity-0 scale-95"
                 >
-                  <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none">
+                  <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 divide-y divide-gray-100 dark:divide-gray-800 rounded-md shadow-lg focus:outline-none">
                     <Menu.Item>
                       {({ active }) => (
                         <button
                           onClick={logout}
                           className={`${
-                            active ? "bg-gray-100" : ""
-                          } w-full text-left px-4 py-2 text-gray-700`}
+                            active ? "bg-gray-100 dark:bg-gray-800" : ""
+                          } w-full text-left px-4 py-2 text-gray-700 dark:text-gray-200`}
                         >
                           Logga ut
                         </button>
@@ -100,19 +102,19 @@ export default function Header() {
           <div className="lg:hidden mt-2 space-y-1 text-sm">
             <Link
               href="/dashboard"
-              className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+              className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded"
             >
               Dashboard
             </Link>
             <Link
               href="/dashboard/historik"
-              className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+              className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded"
             >
               Mina pass
             </Link>
             <Link
               href="/dashboard/logga-pass"
-              className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+              className="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded"
             >
               Logga pass
             </Link>
