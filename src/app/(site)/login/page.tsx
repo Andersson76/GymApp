@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import ToggleDarkMode from "@/components/ToggleDarkMode";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -69,7 +70,8 @@ export default function LoginPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="autofill:bg-gray-700 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="autofill:bg-black w-full rounded border border-gray-300 bg-white px-4 py-2 text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300
+             dark:border-white dark:bg-black dark:text-white dark:placeholder-gray-400 dark:focus:ring-white"
           />
           <input
             type="password"
@@ -78,17 +80,20 @@ export default function LoginPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="autofill:bg-gray-700 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="autofill:bg-black w-full mt-4 rounded border border-gray-300 bg-white px-4 py-2 text-black placeholder-gray-500
+             focus:outline-none focus:ring-2 focus:ring-gray-300
+             dark:border-white dark:bg-black dark:text-white dark:placeholder-gray-400 dark:focus:ring-white"
           />
           <button
             type="submit"
-            className="px-6 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black hover:scale-105 transition-transform"
+            className="px-6 py-2 mt-4 rounded-xl bg-black text-white dark:bg-white dark:text-black hover:scale-105 transition-transform"
           >
             Logga in
           </button>
           {error && <p className="text-red-500 text-sm text-center">{error}</p>}
         </form>
       </motion.div>
+      <ToggleDarkMode />
     </main>
   );
 }

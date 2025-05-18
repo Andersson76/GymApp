@@ -63,7 +63,7 @@ export default function LoggaPassForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto">
-      <h2 className="text-xl font-bold">Logga träningspass</h2>
+      <h2 className="text-xl font-bold text-center">Logga träningspass</h2>
 
       <input
         type="text"
@@ -105,7 +105,7 @@ export default function LoggaPassForm() {
 
       <button
         type="submit"
-        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+        className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded"
       >
         Spara pass
       </button>

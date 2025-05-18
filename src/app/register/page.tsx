@@ -4,6 +4,8 @@ import { useState } from "react";
 import { RegisterSchema } from "@/lib/schemas/auth";
 import { extractZodError } from "@/lib/utils/zodErrors";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import Image from "next/image";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -66,44 +68,63 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-20 p-6 shadow rounded bg-white">
-      <h1 className="text-2xl font-semibold mb-4">Registrera dig</h1>
-      <form onSubmit={handleRegister} className="flex flex-col space-y-4">
-        <input
-          type="text"
-          placeholder="Namn"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="border p-2 rounded"
-          autoComplete="off"
+    <main className="flex min-h-screen items-center justify-center bg-gradient-to-b from-gray-100 to-white dark:from-gray-900 dark:to-black px-4">
+      <motion.div
+        className="text-center"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        <Image
+          src="/gymappTransparent.png"
+          alt="GymApp logotyp"
+          width={200}
+          height={200}
+          className="mx-auto mb-6"
+          priority
         />
-        <input
-          type="email"
-          placeholder="E-post"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="border p-2 rounded"
-          autoComplete="off"
-        />
-        <input
-          type="password"
-          placeholder="Lösenord"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="border p-2 rounded"
-          autoComplete="new-password"
-        />
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-        {success && (
-          <p className="text-green-500 text-sm">Registrering lyckades! 🎉</p>
-        )}
-        <button
-          type="submit"
-          className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
-        >
-          Registrera
-        </button>
-      </form>
-    </div>
+        <form onSubmit={handleRegister} className="flex flex-col space-y-4">
+          <input
+            type="text"
+            placeholder="Namn"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="autofill:bg-black w-full rounded border border-gray-300 bg-white px-4 py-2 text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-300
+             dark:border-white dark:bg-black dark:text-white dark:placeholder-gray-400 dark:focus:ring-white"
+            autoComplete="off"
+          />
+          <input
+            type="email"
+            placeholder="E-post"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="autofill:bg-black w-full mt-4 rounded border border-gray-300 bg-white px-4 py-2 text-black placeholder-gray-500
+             focus:outline-none focus:ring-2 focus:ring-gray-300
+             dark:border-white dark:bg-black dark:text-white dark:placeholder-gray-400 dark:focus:ring-white"
+            autoComplete="off"
+          />
+          <input
+            type="password"
+            placeholder="Lösenord"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="autofill:bg-black w-full mt-4 rounded border border-gray-300 bg-white px-4 py-2 text-black placeholder-gray-500
+             focus:outline-none focus:ring-2 focus:ring-gray-300
+             dark:border-white dark:bg-black dark:text-white dark:placeholder-gray-400 dark:focus:ring-white"
+            autoComplete="new-password"
+          />
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+          {success && (
+            <p className="text-green-500 text-sm">Registrering lyckades! 🎉</p>
+          )}
+          <button
+            type="submit"
+            className="px-6 py-2 mt-4 rounded-xl border border-black text-black dark:border-white dark:text-white hover:scale-105 transition-transform"
+          >
+            Registrera
+          </button>
+        </form>
+      </motion.div>
+    </main>
   );
 }
