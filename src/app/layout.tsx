@@ -52,7 +52,9 @@ export default function RootLayout({
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="theme-color" content="#ffffff" />
       </head>
-      <body className="m-0 p-0 overflow-x-hidden">{children}</body>
+      <body className="m-0 p-0 overflow-x-hidden bg-white text-black dark:bg-black dark:text-white transition-colors duration-300">
+        {children}
+      </body>
     </html>
   );
 }

@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useAuth } from "@/context/AuthContext";
 import { Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import ToggleDarkMode from "./ToggleDarkMode";
+//import ToggleDarkMode from "./ToggleDarkMode";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -48,7 +48,7 @@ export default function Header() {
           {/* Höger: Auth eller meny */}
           <div className="flex items-center gap-4">
             {/* Toggle-knapp – visas alltid */}
-            <ToggleDarkMode />
+            {/* <ToggleDarkMode /> */}
             {!user ? (
               <>
                 <Link
@@ -66,32 +66,42 @@ export default function Header() {
               </>
             ) : (
               <Menu as="div" className="relative text-sm">
-                <Menu.Button className="hidden sm:inline text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
-                  Inloggad som: <span className="font-medium">{user.name}</span>
-                </Menu.Button>
-                <Transition
-                  enter="transition ease-out duration-100"
-                  enterFrom="transform opacity-0 scale-95"
-                  enterTo="transform opacity-100 scale-100"
-                  leave="transition ease-in duration-75"
-                  leaveFrom="transform opacity-100 scale-100"
-                  leaveTo="transform opacity-0 scale-95"
-                >
-                  <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 divide-y divide-gray-100 dark:divide-gray-800 rounded-md shadow-lg focus:outline-none">
-                    <Menu.Item>
-                      {({ active }) => (
-                        <button
-                          onClick={logout}
-                          className={`${
-                            active ? "bg-gray-100 dark:bg-gray-800" : ""
-                          } w-full text-left px-4 py-2 text-gray-700 dark:text-gray-200`}
-                        >
-                          Logga ut
-                        </button>
-                      )}
-                    </Menu.Item>
-                  </Menu.Items>
-                </Transition>
+                {({ open }) => (
+                  <div
+                    onMouseEnter={() => setMobileMenuOpen(false)} // stäng mobilmeny om aktiv
+                    className="group inline-block"
+                  >
+                    <Menu.Button className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none">
+                      <span className="hidden sm:inline">Inloggad som: </span>
+                      <span className="font-medium">{user.name}</span>
+                    </Menu.Button>
+
+                    <Transition
+                      show={open}
+                      enter="transition ease-out duration-100"
+                      enterFrom="transform opacity-0 scale-95"
+                      enterTo="transform opacity-100 scale-100"
+                      leave="transition ease-in duration-75"
+                      leaveFrom="transform opacity-100 scale-100"
+                      leaveTo="transform opacity-0 scale-95"
+                    >
+                      <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 divide-y divide-gray-100 dark:divide-gray-800 rounded-md shadow-lg focus:outline-none">
+                        <Menu.Item>
+                          {({ active }) => (
+                            <button
+                              onClick={logout}
+                              className={`${
+                                active ? "bg-gray-100 dark:bg-gray-800" : ""
+                              } w-full text-left px-4 py-2 text-gray-700 dark:text-gray-200`}
+                            >
+                              Logga ut
+                            </button>
+                          )}
+                        </Menu.Item>
+                      </Menu.Items>
+                    </Transition>
+                  </div>
+                )}
               </Menu>
             )}
           </div>

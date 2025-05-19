@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import ToggleDarkMode from "@/components/ToggleDarkMode";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -93,7 +92,6 @@ export default function LoginPage() {
           {error && <p className="text-red-500 text-sm text-center">{error}</p>}
         </form>
       </motion.div>
-      <ToggleDarkMode />
     </main>
   );
 }
