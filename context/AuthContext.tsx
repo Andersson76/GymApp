@@ -20,7 +20,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<TokenPayload | null>(null);
 
-  // 🧠 Behåll inloggning vid page refresh
+  // Behåll inloggning vid sid refresh
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return;

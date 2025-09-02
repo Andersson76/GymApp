@@ -1,7 +1,7 @@
 import { TokenPayload } from "@/types/auth";
 import jwt, { SignOptions } from "jsonwebtoken";
 
-// Skapa ett JWT-token från payload
+// Skapa ett JWT token från payload.
 export function signToken(
   payload: TokenPayload,
   options?: SignOptions
@@ -12,12 +12,12 @@ export function signToken(
   }
 
   return jwt.sign(payload, JWT_SECRET as string, {
-    expiresIn: "1h", // default
+    expiresIn: "1h",
     ...options,
   });
 }
 
-// Verifiera ett JWT-token och returnera innehållet (eller null om ogiltigt)
+// Verifiera ett JWT token och returnera innehållet eller null om ogiltigt.
 export function verifyToken<T = TokenPayload>(token: string): T | null {
   const JWT_SECRET = process.env.JWT_SECRET;
   if (!JWT_SECRET) {

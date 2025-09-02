@@ -17,7 +17,6 @@ export async function POST(req: NextRequest) {
 
     const { email, password } = result.data;
 
-    // Kontrollera att användaren finns och att lösenord matchar
     const userResult = await safeQuery<User>(
       "SELECT * FROM users WHERE email = $1 AND password = $2",
       [email, password]
@@ -26,7 +25,7 @@ export async function POST(req: NextRequest) {
     console.log("safeQuery login-resultat:", userResult);
 
     if (!userResult.success) {
-      console.error("DB-fel vid login:", userResult.error);
+      console.error("DB fel vid login:", userResult.error);
       return apiError("Kunde inte kontrollera inloggning", 500);
     }
 
@@ -39,7 +38,7 @@ export async function POST(req: NextRequest) {
     const payload: TokenPayload = {
       userId: user.id,
       email: user.email,
-      name: user.name
+      name: user.name,
     };
 
     const token = signToken(payload);

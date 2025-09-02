@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// Skapa nytt träningspass
+
 export async function POST(req: NextRequest) {
   const token = req.headers.get("authorization")?.split(" ")[1];
   const payload = verifyToken(token ?? "");
