@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifyToken } from "@/lib/jwt";
 import type { TokenPayload } from "@/types/auth";
 
+export const runtime = "nodejs";
+
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get("authorization");
   const token = authHeader?.split(" ")[1];

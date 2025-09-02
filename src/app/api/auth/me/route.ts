@@ -3,6 +3,8 @@ import { verifyToken } from "@/lib/jwt";
 import { safeQuery } from "@/lib/safeQuery";
 import { User } from "@/types/user";
 
+export const runtime = "nodejs";
+
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get("authorization");
   const token = authHeader?.replace("Bearer ", "");

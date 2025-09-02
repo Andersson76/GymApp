@@ -4,6 +4,8 @@ import { isNonEmptyString, isValidEmail } from "@/lib/validators";
 import { handleError } from "@/lib/handleError";
 import type { User, NewUser, PublicUser } from "@/types/user";
 
+export const runtime = "nodejs";
+
 export async function GET() {
   try {
     const result = await safeQuery<User>(
