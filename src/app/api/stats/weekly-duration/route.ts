@@ -2,6 +2,8 @@ import { NextRequest } from "next/server";
 import { query } from "@/lib/db";
 import { verifyToken } from "@/lib/jwt"; // för att få user_id från token
 
+export const runtime = "nodejs";
+
 export async function GET(req: NextRequest) {
   try {
     const token = req.headers.get("authorization")?.split(" ")[1];

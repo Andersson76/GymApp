@@ -7,6 +7,8 @@ import { LoginSchema } from "@/lib/schemas/auth";
 import type { User } from "@/types/user";
 import type { TokenPayload } from "@/types/auth";
 
+export const runtime = "nodejs";
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();

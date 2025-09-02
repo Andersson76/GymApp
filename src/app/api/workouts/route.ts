@@ -3,6 +3,8 @@ import { verifyToken } from "@/lib/jwt";
 import { WorkoutSchema } from "@/lib/schemas/workout";
 import { query } from "@/lib/db";
 
+export const runtime = "nodejs";
+
 // Hämta alla träningspass
 export async function GET(req: NextRequest) {
   const token = req.headers.get("authorization")?.split(" ")[1];

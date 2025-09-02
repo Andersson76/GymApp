@@ -3,6 +3,8 @@ import { WorkoutSchema } from "@/lib/schemas/workout";
 import { verifyToken } from "@/lib/jwt";
 import { query } from "@/lib/db";
 
+export const runtime = "nodejs";
+
 // GET träningspass med id
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function GET(req: NextRequest, { params }: any) {
