@@ -46,4 +46,4 @@ CREATE TABLE workout_exercises (
 
 --Testdata (användare)
 INSERT INTO users (name, email, password)
-VALUES ('Testperson', 'test@example.com', '1234');
+VALUES ('Testperson', 'test@test.com', '1234');
